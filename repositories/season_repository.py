@@ -15,6 +15,12 @@ def find_one_by_id(season_id):
     return Season(**res)
 
 
+def find_one_by_year(year: int):
+    query = f"select * from {TABLE_NAME} where year = {year}"
+    res = main_repo.get_one(query)
+    return Season(**res)
+
+
 def insert(season: Season):
     query = f"INSERT INTO {TABLE_NAME}(year) VALUES (%s)"
     return main_repo.make_data_modify_query(query, (season.year,))

@@ -5,7 +5,7 @@ from typing import List
 
 @dataclass
 class Player:
-    name: int
+    name: str
     player_str_id: str
     positions: List[Position] = None
     id: int = None

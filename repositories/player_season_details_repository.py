@@ -21,7 +21,7 @@ def insert(player_season_details: PlayerSeasonDetails):
     threePercent, twoFg, twoAttempts, twoPercent, assists, turnovers, games, points) 
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'''
     return main_repo.make_data_modify_query(query, (
-        player_season_details.player_group_season.id,
+        player_season_details.player_team_season.id,
         player_season_details.fieldGoals,
         player_season_details.fieldAttempts,
         player_season_details.fieldPercent,

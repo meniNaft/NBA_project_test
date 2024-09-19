@@ -1,8 +1,25 @@
 import repositories.main_repository as main_repo
 import repositories.position_repository as position_repo
 import repositories.season_repository as season_repo
+import repositories.player_repository as player_repo
+import repositories.team_repository as team_repo
+import repositories.player_team_repository as player_team_repo
+import repositories.player_position_repository as player_position_repo
+import repositories.player_team_season_repository as player_team_season_repo
+import repositories.player_season_details_repository as player_season_details_repo
+from api.NBA_api import get_players_per_season
+from models.NBA_api_object import NBAApiObject
+from models.player import Player
+from models.player_team import PlayerTeam
+from models.player_team_season import PlayerTeamSeason
 from models.position import Position
 from models.season import Season
+from models.player_position import PlayerPosition
+from models.player_season_details import PlayerSeasonDetails
+from typing import List
+from toolz import *
+
+from models.team import Team
 
 
 def create_players_table():
@@ -140,6 +157,44 @@ def seed_season_table():
             season_repo.insert(s)
 
 
+def fetch_NBA_api_data(year: int):
+    res: List[NBAApiObject] = get_players_per_season(year)
+    season = season_repo.find_one_by_year(year)
+    positions: List[Position] = position_repo.find_all()
+    for item in res:
+        player = Player(name=item.playerName, player_str_id=item.playerId)
+        team = Team(name=item.team, is_real=True)
+        player.id = player_repo.insert(player)
+        team.id = team_repo.insert(team)
+        pipe(
+            positions,
+            partial(filter, lambda p: p.type in item.position.split("-")),
+            partial(map, lambda p: PlayerPosition(player=player, position=p)),
+            partial(map, lambda pp: player_position_repo.insert(pp))
+        )
+        player_team = PlayerTeam(player=player, team=team)
+        player_team.id = player_team_repo.insert(player_team)
+        player_team_season = PlayerTeamSeason(player_team=player_team, season=season)
+        player_team_season.id = player_team_season_repo.insert(player_team_season)
+        player_season_details = PlayerSeasonDetails(
+            player_team_season=player_team_season,
+            fieldGoals=item.fieldGoals,
+            fieldAttempts=item.fieldAttempts,
+            fieldPercent=item.fieldPercent if item.fieldPercent else 0,
+            threeFg=item.threeFg,
+            threeAttempts=item.threeAttempts,
+            threePercent=item.threePercent if item.threePercent else 0,
+            twoFg=item.twoFg,
+            twoAttempts=item.twoAttempts,
+            twoPercent=item.twoPercent if item.twoPercent else 0,
+            assists=item.assists,
+            turnovers=item.turnovers,
+            games=item.games,
+            points=item.points
+        )
+        player_season_details_repo.insert(player_season_details)
+
+
 def run_seed():
     create_positions_table()
     create_seasons_table()
@@ -152,3 +207,6 @@ def run_seed():
 
     seed_position_table()
     seed_season_table()
+    if is_table_empty("players"):
+        for year in [2022, 2023, 2024]:
+            fetch_NBA_api_data(year)

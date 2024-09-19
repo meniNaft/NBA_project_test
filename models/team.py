@@ -3,6 +3,6 @@ from dataclasses import dataclass
 
 @dataclass
 class Team:
-    name: int
+    name: str
     is_real: bool
     id: int = None

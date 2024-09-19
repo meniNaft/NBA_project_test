@@ -1,10 +1,11 @@
 from dataclasses import dataclass
-from models.player_team_season import PlayerTeamSeason
 
 
 @dataclass
-class PlayerSeasonDetails:
-    player_team_season: PlayerTeamSeason
+class NBAApiObject:
+    playerName: str
+    position: str
+    games: int
     fieldGoals: int
     fieldAttempts: int
     fieldPercent: float
@@ -16,6 +17,8 @@ class PlayerSeasonDetails:
     twoPercent: float
     assists: int
     turnovers: int
-    games: int
+    personalFouls: int
     points: int
-    id: int = None
+    team: str
+    season: int
+    playerId: str
