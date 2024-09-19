@@ -1,7 +1,7 @@
-import main_repository as main_repo
+import repositories.main_repository as main_repo
 from models.position import Position
 
-TABLE_NAME = "position"
+TABLE_NAME = "positions"
 
 
 def find_all():

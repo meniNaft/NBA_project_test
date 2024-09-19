@@ -1,8 +1,7 @@
-import main_repository as main_repo
-from models.season import Season
+import repositories.main_repository as main_repo
 from models.team import Team
 
-TABLE_NAME = "team"
+TABLE_NAME = "teams"
 
 
 def find_all():

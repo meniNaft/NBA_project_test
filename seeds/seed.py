@@ -60,7 +60,7 @@ def create_player_team_table():
                     player_id INT NOT NULL,
                     team_id INT NOT NULL,
                     CONSTRAINT fk_player FOREIGN KEY (player_id) REFERENCES players(id),
-                    CONSTRAINT fk_team FOREIGN KEY (team_id) REFERENCES team(id)
+                    CONSTRAINT fk_team FOREIGN KEY (team_id) REFERENCES teams(id)
             ) 
             '''
     main_repo.make_structure_query(query)
@@ -102,7 +102,7 @@ def create_seasons_table():
 
 def create_team_table():
     query = '''
-               CREATE TABLE IF NOT EXISTS team(
+               CREATE TABLE IF NOT EXISTS teams(
                        id SERIAL PRIMARY KEY,
                        name VARCHAR(25) NOT NULL,
                        is_real BOOLEAN  NOT NULL

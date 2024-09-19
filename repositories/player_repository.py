@@ -1,4 +1,4 @@
-import main_repository as main_repo
+import repositories.main_repository as main_repo
 from models.player import Player
 TABLE_NAME = "players"
 
