@@ -17,4 +17,10 @@ def find_one_by_id(player_id):
 
 def insert(player: Player):
     query = f"INSERT INTO {TABLE_NAME}(name, player_str_id) VALUES (%s, %s)"
-    return main_repo.make_data_modify_query(query, (player.name, player.player_str_id))
+    return main_repo.make_insert_query(query, (player.name, player.player_str_id))
+
+
+def find_player_by_str_id(str_id: str):
+    query = f"select * from players where player_str_id = '{str_id}'"
+    res = main_repo.get_one(query)
+    return Player(**res) if res else None

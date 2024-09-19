@@ -17,5 +17,5 @@ def find_one_by_id(player_team_season_id):
 
 def insert(player_team_season: PlayerTeamSeason):
     query = f"INSERT INTO {TABLE_NAME}(player_team_id, season_id) VALUES (%s, %s)"
-    return main_repo.make_data_modify_query(query, (player_team_season.player_team.id, player_team_season.season.id))
+    return main_repo.make_insert_query(query, (player_team_season.player_team.id, player_team_season.season.id))
 

@@ -162,18 +162,32 @@ def fetch_NBA_api_data(year: int):
     season = season_repo.find_one_by_year(year)
     positions: List[Position] = position_repo.find_all()
     for item in res:
-        player = Player(name=item.playerName, player_str_id=item.playerId)
-        team = Team(name=item.team, is_real=True)
-        player.id = player_repo.insert(player)
-        team.id = team_repo.insert(team)
-        pipe(
+        player = player_repo.find_player_by_str_id(item.playerId)
+        if player is None:
+            player = Player(name=item.playerName, player_str_id=item.playerId)
+            player.id = player_repo.insert(player)
+
+        team = team_repo.find_team_by_name(item.team)
+        if team is None:
+            team = Team(name=item.team, is_real=True)
+            team.id = team_repo.insert(team)
+
+        plyer_positions: List[PlayerPosition] = pipe(
             positions,
             partial(filter, lambda p: p.type in item.position.split("-")),
             partial(map, lambda p: PlayerPosition(player=player, position=p)),
-            partial(map, lambda pp: player_position_repo.insert(pp))
+            list,
         )
-        player_team = PlayerTeam(player=player, team=team)
-        player_team.id = player_team_repo.insert(player_team)
+        for pp in plyer_positions:
+            res = player_position_repo.find_one_by_player_id_and_position_id(pp.player.id, pp.position.id)
+            if res is None:
+                player_position_repo.insert(pp)
+
+        player_team = player_team_repo.find_by_player_id_and_team_id(player.id, team.id)
+        if player_team is None:
+            player_team = PlayerTeam(player=player, team=team)
+            player_team.id = player_team_repo.insert(player_team)
+
         player_team_season = PlayerTeamSeason(player_team=player_team, season=season)
         player_team_season.id = player_team_season_repo.insert(player_team_season)
         player_season_details = PlayerSeasonDetails(

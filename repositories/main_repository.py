@@ -25,6 +25,7 @@ def make_data_modify_query(query: str, params: tuple = ()):
 
 def make_insert_query(query: str, params: tuple = ()):
     with get_db_connection() as connection, connection.cursor() as cursor:  # type
+        query = query + " RETURNING id"
         cursor.execute(query, params)
         new_id = cursor.fetchone()["id"]
         connection.commit()

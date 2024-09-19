@@ -16,7 +16,13 @@ def find_one_by_id(position_id):
     return Position(**res)
 
 
+def find_one_by_position(position):
+    query = f"select * from {TABLE_NAME} where type = {position}"
+    res = main_repo.get_one(query)
+    return Position(**res) if res else None
+
+
 def insert(position: Position):
     query = f"INSERT INTO {TABLE_NAME}(type) VALUES (%s)"
-    return main_repo.make_data_modify_query(query, (position.type,))
+    return main_repo.make_insert_query(query, (position.type,))
 

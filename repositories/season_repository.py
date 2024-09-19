@@ -23,5 +23,5 @@ def find_one_by_year(year: int):
 
 def insert(season: Season):
     query = f"INSERT INTO {TABLE_NAME}(year) VALUES (%s)"
-    return main_repo.make_data_modify_query(query, (season.year,))
+    return main_repo.make_insert_query(query, (season.year,))
 
