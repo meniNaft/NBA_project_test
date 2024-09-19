@@ -17,7 +17,7 @@ def find_one_by_id(position_id):
 
 
 def find_one_by_position(position):
-    query = f"select * from {TABLE_NAME} where type = {position}"
+    query = f"select * from {TABLE_NAME} where type = '{position}'"
     res = main_repo.get_one(query)
     return Position(**res) if res else None
 
