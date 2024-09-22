@@ -185,8 +185,7 @@ def fetch_NBA_api_data(year: int):
 
         player_team = player_team_repo.find_by_player_id_and_team_id(player.id, team.id)
         if player_team is None:
-            player_team = PlayerTeam(player=player, team=team)
-            player_team.id = player_team_repo.insert(player_team)
+            player_team.id = player_team_repo.insert(player.id, team.id)
 
         player_team_season = PlayerTeamSeason(player_team=player_team, season=season)
         player_team_season.id = player_team_season_repo.insert(player_team_season)

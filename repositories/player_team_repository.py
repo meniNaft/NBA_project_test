@@ -17,9 +17,9 @@ def find_one_by_id(player_team_id):
     return PlayerTeam(**res) if res else None
 
 
-def insert(player_team: PlayerTeam):
+def insert(player_id: int, team_id: int):
     query = f"INSERT INTO {TABLE_NAME}(player_id, team_id) VALUES (%s, %s)"
-    return main_repo.make_insert_query(query, (player_team.player.id, player_team.team.id))
+    return main_repo.make_insert_query(query, (player_id, team_id))
 
 
 def find_by_player_id_and_team_id(player_id: int, team_id: int):
@@ -30,3 +30,8 @@ def find_by_player_id_and_team_id(player_id: int, team_id: int):
         player=player_repo.find_one_by_id(res["player_id"]),
         team=team_repo.find_one_by_id(res["team_id"])
     ) if res else None
+
+
+def delete_by_team(team_id):
+    query = f"delete from player_team where team_id = {team_id}"
+    return main_repo.make_data_modify_query(query)

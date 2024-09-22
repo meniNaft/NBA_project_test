@@ -25,3 +25,8 @@ def find_team_by_name(name: str):
     query = f"select * from {TABLE_NAME} where name = '{name}'"
     res = main_repo.get_one(query)
     return Team(**res) if res else None
+
+
+def delete(team_id):
+    query = f"delete from {TABLE_NAME} where id = {team_id}"
+    return main_repo.make_data_modify_query(query)

@@ -7,7 +7,7 @@ import utils.metrics_utils as utils
 
 def search_players(position: str, season_year: int = None) -> List[SearchPlayerDto]:
     db_res = player_repo.search_players_by_position_and_season(position, season_year)
-    list_points_games_dict = list(map(get_points_games_dict, db_res))
+    list_points_games_dict = list(map(utils.get_points_games_dict, db_res))
 
     if season_year is None:
         player_data = {}
@@ -64,11 +64,7 @@ def search_players(position: str, season_year: int = None) -> List[SearchPlayerD
         three_percents=v["three_percents"],
         ATR=utils.get_assists_turnover_ratio(v["assists"], v["turnovers"]),
         PPG_ratio=utils.get_points_per_game(
-            current_player=get_points_games_dict(v),
+            current_player=utils.get_points_games_dict(v),
             all_players_details=list_points_games_dict
         ),
     ), db_res))
-
-
-def get_points_games_dict(row):
-    return {"points": row["points"], "games": row["games"]}

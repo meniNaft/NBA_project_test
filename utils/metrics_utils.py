@@ -4,7 +4,10 @@ from toolz import *
 
 
 def get_assists_turnover_ratio(assists: int, turnovers: int):
-    return assists / turnovers
+    try:
+        return assists / turnovers
+    except:
+        return 0
 
 
 def get_points_per_game(current_player: {"points": int, "games": int}, all_players_details: List[{"points": int, "games": int}]):
@@ -16,3 +19,7 @@ def get_points_per_game(current_player: {"points": int, "games": int}, all_playe
         lambda li: sum(li) / len(li)
     )
     return current_avg / avg
+
+
+def get_points_games_dict(row):
+    return {"points": row["points"], "games": row["games"]}
